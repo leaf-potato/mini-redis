@@ -12,18 +12,24 @@ An incomplete implementation of a Rust client and server. Used as a
 larger example of an idiomatic Tokio application.
 """
 
+# [[bin]]用于编写除了main之外的二进制程序, 例如cli和server
 [[bin]]
-name = "mini-redis-cli"
-path = "src/bin/cli.rs"
+name = "mini-redis-cli" # 编译后的二进制文件名
+path = "src/bin/cli.rs" # 源代码入口的文件路径
 
 [[bin]]
 name = "mini-redis-server"
 path = "src/bin/server.rs"
 
+# dependencies作用:
+# 1. 编译主程序&发布crates.io后会被包含.
+# 2. 在cargo build和cargo run会被编译.
 [dependencies]
 async-stream = "0.3.0"
 atoi = "2.0.0"
+# 字节缓存冲区管理
 bytes = "1"
+# 命令行参数解析器
 clap = { version = "4.2.7", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 tokio-stream = "0.1"
@@ -38,9 +44,16 @@ opentelemetry-aws = { version = "0.8.0", optional = true }
 # Allows you to send data to the OTel collector
 opentelemetry-otlp = { version = "0.13.0", optional = true }
 
+# dev-dependencies作用:
+# 1. 不会包含在最终发布的二进制文件中.
+# 2. 在cargo test、cargo bench、cargo build --examples等命令会被编译.
 [dev-dependencies]
 # Enable test-utilities in dev mode only. This is mostly for tests.
 tokio = { version = "1", features = ["test-util"] }
 
+# features作用:
+# 自定义条件编译, 将配置信息打包成featux
+# 在build时根据feature启用或禁用某些功能.
+# 例如: cargo build --features otel
 [features]
 otel = ["dep:opentelemetry", "dep:tracing-opentelemetry", "dep:opentelemetry-aws", "dep:opentelemetry-otlp"]
